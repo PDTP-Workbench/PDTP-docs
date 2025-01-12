@@ -1,11 +1,15 @@
 import clsx from "clsx";
 import { type FC, useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/prism";
+
+import theme from "react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus";
 import { Z_INDEX } from "../../constants";
 
 type Props = {
 	children: string;
+	language?: string;
 };
-export const CodeBlock: FC<Props> = ({ children }) => {
+export const CodeBlock: FC<Props> = ({ children, language = "tsx" }) => {
 	const [copied, setCopied] = useState(false);
 	const handleCopy = () => {
 		navigator.clipboard.writeText(children);
@@ -19,16 +23,24 @@ export const CodeBlock: FC<Props> = ({ children }) => {
 		<div className={"relative"}>
 			<pre
 				className={clsx(
-					"bg-gray-800 z-0 relative text-white p-4 rounded-lg overflow-auto",
+					" z-0 relative text-white p-4 rounded-lg overflow-auto border border-gray-600 bg-slate-50/5",
 					Z_INDEX.BASE,
 				)}
 			>
-				<code>{children}</code>
+				<SyntaxHighlighter
+					style={theme}
+					language={language}
+					customStyle={{
+						backgroundColor: "transparent",
+					}}
+				>
+					{children}
+				</SyntaxHighlighter>
 			</pre>
 			<button
 				onClick={handleCopy}
 				type="button"
-				className="absolute top-2 right-2 bg-gray-800 text-white px-2 py-1 rounded-lg"
+				className="absolute top-2 right-2 text-white px-2 py-1 rounded-lg border border-gray-600"
 			>
 				{copied ? "Copied!" : "Copy"}
 			</button>

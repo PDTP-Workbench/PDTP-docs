@@ -19,7 +19,7 @@ export const Usage = () => {
 					Usage of the package is simple. Just import the package and use it as
 					shown below:
 				</p>
-				<CodeBlock>{goServerSample}</CodeBlock>
+				<CodeBlock language="go">{goServerSample}</CodeBlock>
 			</div>
 		</div>
 	);
