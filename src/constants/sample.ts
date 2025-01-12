@@ -47,6 +47,7 @@ func main() {
 			ParsePathName: func(fileName string) (string, error) {
 				return fileName, nil
 			},
+			CompressionMethod: pdtp.GzipCompression{},
 		},
 	))
 	corsHandler := CORSMiddleware(http.DefaultServeMux)
