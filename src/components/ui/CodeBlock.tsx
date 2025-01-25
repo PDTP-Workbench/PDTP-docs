@@ -1,3 +1,4 @@
+"use client";
 import clsx from "clsx";
 import { type FC, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/prism";
@@ -7,9 +8,12 @@ import { Z_INDEX } from "../../constants";
 
 type Props = {
 	children: string;
-	language?: string;
+	language?: "language-bash" | "language-typescript" | "language-go";
 };
-export const CodeBlock: FC<Props> = ({ children, language = "tsx" }) => {
+export const CodeBlock: FC<Props> = ({
+	children,
+	language = "language-bash",
+}) => {
 	const [copied, setCopied] = useState(false);
 	const handleCopy = () => {
 		navigator.clipboard.writeText(children);

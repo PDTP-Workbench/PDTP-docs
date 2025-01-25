@@ -1,0 +1,71 @@
+# Installation
+
+## Web Client
+Install the package via npm:
+```bash
+npm install @pdtp/core
+```
+
+# API Server with Golang
+Install the package via go get:
+```bash
+go get github.com/pdtp-workbench/pdtp-go
+```
+
+
+# Usage
+
+## Web Client
+Usage of the package is simple. Just import the package and use it as shown below:
+```typescript
+import { PdtpProvider, PdtpRenderer } from "@pdtp/react";
+
+const App = () => {
+  return (
+    <PdtpProvider
+      options={{
+        file: "example.pdf",
+        base: 1,
+        start: 1,
+        end: 5,
+      }}
+    >
+      <PdtpRenderer />
+    </PdtpProvider>
+  );
+};
+
+export default App;
+```
+
+## API Server with Golang
+Usage of the package is simple. Just import the package and use it as shown below:
+```go
+
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/pdtp-workbench/pdtp-go"
+)
+
+
+func main() {
+	http.HandleFunc("/pdtp", pdtp.NewPDFProtocolHandler(
+		pdtp.Config{
+			HandleOpenPDF: func(fileName string) (pdtp.IPDFFile, error) {
+				file, err := os.Open(fileName)
+				return file, err
+			},
+			CompressionMethod: pdtp.ZstdCompression{},
+		},
+	))
+
+	fmt.Println("PDF Protocol Server listening on http://localhost:8080")
+  log.Fatal(http.ListenAndServe(":8080", nil))
+}
+```

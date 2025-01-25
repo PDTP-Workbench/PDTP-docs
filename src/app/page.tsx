@@ -1,27 +1,19 @@
 "use client";
-import { BackGround } from "../components/BackGround";
 import { Feature } from "../components/Feature";
-import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
-import { Installation } from "../components/Installation";
-import { Usage } from "../components/Usage";
-import { useFirstVisit } from "../libs/firstVisit";
-
+import Usage from "./Usage.mdx";
 export default function Home() {
 	return (
 		<>
-			<Header />
-			<main>
-				<BackGround />
-				<Hero />
-				<div className=" w-full flex justify-center items-center">
-					<div className=" flex-col w-3/4 flex gap-16  ">
-						<Feature />
-						<Installation />
+			<Hero />
+			<div className=" w-full flex justify-center items-center">
+				<div className=" flex-col w-3/4 flex gap-16  ">
+					<Feature />
+					<article className="prose dark:prose-invert max-w-full">
 						<Usage />
-					</div>
+					</article>
 				</div>
-			</main>
+			</div>
 		</>
 	);
 }

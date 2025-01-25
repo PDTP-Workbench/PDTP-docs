@@ -4,7 +4,7 @@ const App = () => {
   return (
     <div>
       <h1>PDTP Example</h1>
-      <PdtpRenderer
+      <Pr
         file="http://localhost:8080/pdf-protocol?file=example.pdf"
         base={1}
         start={1}

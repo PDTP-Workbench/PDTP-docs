@@ -1,3 +1,5 @@
+import { BackGround } from "@/components/BackGround";
+import { Header } from "@/components/Header";
 import type { Metadata } from "next";
 import "./globals.css";
 export const dynamic = "force-static";
@@ -54,7 +56,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body>{children}</body>
+			<body>
+				<Header />
+				<BackGround />
+				<main className="pt-24">{children}</main>
+			</body>
 		</html>
 	);
 }

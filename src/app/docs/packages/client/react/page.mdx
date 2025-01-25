@@ -1,0 +1,99 @@
+# @pdtp/react
+
+This package provides React components and hooks for rendering and managing data transferred using the PDTP protocol. It supports chunked data processing and offers utilities to integrate PDTP into React applications.
+
+## Installation
+```bash
+npm install @pdtp/react
+```
+
+## Usage
+```typescript
+import { PdtpProvider, PdtpRenderer } from "@pdtp/react";
+
+const App = () => {
+  return (
+    <PdtpProvider
+      options={{
+        file: "example.pdf",
+        headers: { base: 0, start: 1, end: 5 },
+      }}
+    >
+      <PdtpRenderer />
+    </PdtpProvider>
+  );
+};
+```
+
+## API
+
+### PdtpProvider
+
+A context provider for managing PDTP configuration in a React application.
+
+```typescript
+export const PdtpProvider: React.FC<{
+  options: PdtpRequestOptions;
+  children: React.ReactNode;
+}>
+```
+
+- **options**: Configuration options for the PDTP request.
+  - **file**: The file to request via the PDTP protocol.
+  - **headers**: Request headers, including`bas`,`star`, and`en` for page ranges.
+- **children**: The child components to be wrapped within the provider.
+
+---
+
+### usePdtpContext
+
+A React hook for accessing the PDTP context.
+
+```typescript
+export function usePdtpContext(): {
+  requestOptions: PdtpRequestOptions;
+}
+```
+
+- Throws an error if used outside of a `PdtpProvider`.
+
+---
+
+### PdtpRenderer
+
+A React component for rendering data obtained via the PDTP protocol.
+
+```typescript
+export const PdtpRenderer: FC;
+```
+
+- Automatically renders pages, text, images, and paths based on the parsed PDTP data.
+
+---
+
+### usePdtpData
+
+A React hook for fetching and organizing chunked PDTP data by page.
+
+```typescript
+export function usePdtpData(): Record<number, PageData>;
+```
+
+- Returns a record of page data, including metadata for text, images, and paths.
+
+---
+
+### PageData
+
+An object representing a single page's data.
+
+```typescript
+type PageData = {
+  page: number;
+  width: number;
+  height: number;
+  texts: Array<TextMetadata>;
+  images: Array<{ meta: ImageMetadata; url: string }>;
+  paths: Array<PathMetadata>;
+};
+```

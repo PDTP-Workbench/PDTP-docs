@@ -1,0 +1,257 @@
+# @pdtp/core
+
+This package is a package that supports protocol transfer.
+It is a client that parses data sent from the server side and returns it as an object.
+This package is used in `@pdtp/react`.
+If you want to create another PDF viewer, please use this package.
+
+## Installation
+```bash
+npm install @pdtp/core
+```
+
+## Usage
+```typescript
+const client = new PdtpClient({
+  file: file,
+  headers: {
+    base: base,
+    start: start,
+    end: end,
+  },
+})
+```
+
+## API
+
+
+### PdtpClient
+A class that parses the data sent from the server side and returns it as an object
+
+
+```typescript
+class PdtpClient {
+  constructor(options: PdtpRequestOptions);
+  public async fetchChunkedData(onData: OnPdtpDataCallback): Promise<void>;
+}
+```
+
+- options: PdtpRequestOptions
+- onData: OnPdtpDataCallback
+
+
+---
+
+### OnPdtpDataCallback
+A callback function that processes the parsed object of the data obtained from the server
+
+```typescript
+type OnPdtpDataCallback = (data: PdtpChunkPayload) => void;
+```
+
+- data: PdtpChunkPayload
+
+---
+
+### PdtpDataType
+
+data attached to the beginning of each chunk of the server response
+
+- PAGE = 0x00
+- TEXT = 0x01
+- IMAGE = 0x02
+- FONT = 0x03
+- PATH = 0x04
+- ERROR = 0xff
+
+
+---
+
+### PageMetadata
+An object that parses page data sent from the server
+
+```typescript
+interface PageMetadata {
+  width: number; // px
+  height: number; // px
+  page: number; // page number
+}
+```
+
+- width: width of the page in pixels
+- height: height of the page in pixels
+- page: page number
+
+
+---
+
+### TextMetadata
+An object that parses text data sent from the server
+
+```typescript
+interface TextMetadata {
+  text: string; // text string (UTF-8)
+  x: number; // px
+  y: number; // px
+  z: number; // z-index
+  fontSize: number; // px
+  font: string; // font ID
+  page: number; // page number
+  color: string; // text color
+}
+```
+
+- text: text string (UTF-8)
+- x: px
+- y: px
+- z: z-index
+- fontSize: px
+- font: font ID
+- page: page number
+- color: text color
+
+
+---
+
+### ImageMetadata
+An object that parses image data sent from the server
+
+```typescript
+interface ImageMetadata {
+  x: number; // px
+  y: number; // px
+  z: number; // z-index
+  width: number; // px
+  height: number; // px
+  dw: number; // px
+  dh: number; // px
+  length: number; // byte size of the image body data
+  maskLength: number; // byte size of the transparent mask image data
+  page: number; // page number
+  ext: string; // image extension
+  clipPath: string; // clipping path
+}
+```
+
+- x: px
+- y: px
+- z: z-index
+- width: px
+- height: px
+- dw: px
+- dh: px
+- length: byte size of the image body data
+- maskLength: byte size of the transparent mask image data
+- page: page number
+- ext: image extension
+- clipPath: clipping path
+
+
+---
+
+### FontMetadata
+An object that parses font data sent from the server
+
+```typescript
+interface FontMetadata {
+  fontId: number; // font id (or string)
+  length: number; // byte size of the font data
+}
+```
+
+- fontId: font id (or string)
+- length: byte size of the font data
+
+
+---
+
+### PathMetadata
+An object that parses vector data sent from the server
+
+```typescript
+interface PathMetadata {
+  x: number;
+  y: number;
+  z: number;
+  width: number;
+  height: number;
+}
+```
+
+- x: px
+- y: px
+- z: z-index
+- width: px
+- height: px
+
+---
+
+### PdtpChunkPayload
+
+The type of the result of parsing the data received from the server side by PdtpClient
+
+```typescript
+type PdtpChunkPayload =
+  | {
+      type: "page";
+      data: PageMetadata;
+    }
+  | {
+      type: "text";
+      data: TextMetadata;
+    }
+  | {
+      type: "image";
+      data: ImageMetadata;
+      blob: Blob;
+    }
+  | {
+      type: "font";
+      data: FontMetadata;
+      blob: Blob;
+    }
+  | {
+      type: "path";
+      data: PathMetadata;
+    };
+```
+
+- type: data type
+- data: parsed data
+
+
+---
+
+### PdtpRequestHeaders
+An option that is part of the options applied when instantiating PdtpClient and applied to the request header
+```typescript
+interface PdtpRequestHeaders {
+  base?: number;
+  start?: number;
+  end?: number;
+}
+```
+
+
+- base: the first page to be loaded
+- start: page to start loading
+- end: page to end loading
+
+
+---
+
+### PdtpRequestOptions
+An option to use when fetching
+```typescript
+interface PdtpRequestOptions {
+  file: string;
+  headers?: PdtpRequestHeaders;
+  abortController?: AbortController;
+}
+```
+
+
+- file: a field that the server handles when requested, such as a URL or a file name
+- headers: PDTP header
+- abortController: for fetch interruption
+
