@@ -1,28 +1,24 @@
-import { createContext, useContext } from "react";
-
-type FirstVisit = {
-	firstVisit: boolean;
-	setFirstVisit: (firstVisit: boolean) => void;
-};
-const firstVisitContext = createContext<FirstVisit>({
-	firstVisit: true,
-	setFirstVisit: () => {},
-});
+import { useEffect, useState } from "react";
 
 export const useFirstVisit = () => {
-	const context = useContext(firstVisitContext);
-	if (!context) {
-		throw new Error("useFirstVisit must be used within a FirstVisitProvider");
-	}
+	const [firstVisit, setFirstVisit] = useState<boolean>(true);
+
 	const visit = () => {
-		context.setFirstVisit(true);
 		localStorage.setItem("visited", "true");
+		setFirstVisit(false);
 	};
 	const reset = () => {
-		context.setFirstVisit(false);
 		localStorage.setItem("visited", "false");
+		setFirstVisit(true);
 	};
-	return { firstVisit: context.firstVisit, visit, reset };
-};
 
-export const FirstVisitWrapper = firstVisitContext.Provider;
+	useEffect(() => {
+		const visited = localStorage.getItem("visited") === "true";
+		if (visited) {
+			setFirstVisit(false);
+		} else {
+			setFirstVisit(true);
+		}
+	}, []);
+	return { firstVisit: firstVisit, visit, reset };
+};

@@ -1,20 +1,20 @@
+import { useFirstVisit } from "@/libs/firstVisit";
 import type { FC } from "react";
 import { PDTP_OVERVIEW } from "../../constants";
 import { AnimatedSquares } from "./circle";
 import { PDTP } from "./pdtp";
 
-type Props = {
-	animate: boolean;
-};
-export const Hero: FC<Props> = ({ animate }) => {
+export const Hero: FC = () => {
+	const { firstVisit } = useFirstVisit();
+
 	return (
 		<section className="h-screen flex flex-col justify-center w-full">
 			<span className="flex flex-col items-center w-full">
 				<h1 className="w-[300px] overflow-hidden h-[200px] md:ml-12 md:mt-32 ml-4 mt-32  text-6xl font-bold flex relative scale-[120%] md:scale-[200%]">
 					<span className="absolute scale-[44%] top-[-8px] left-[-77px] text-white">
-						<PDTP animate={animate} />
+						<PDTP animate={firstVisit} />
 					</span>
-					{animate && (
+					{firstVisit && (
 						<AnimatedSquares
 							positions={[
 								// P
